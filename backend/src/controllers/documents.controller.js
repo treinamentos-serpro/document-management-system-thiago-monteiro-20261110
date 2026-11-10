@@ -8,6 +8,11 @@ function getOwner(request) {
     : defaultOwner;
 }
 
+function toPublicDocument(document) {
+  const { storageName, ...publicDocument } = document;
+  return publicDocument;
+}
+
 function upload(request, response) {
   if (!request.file) {
     return response.status(400).json({
@@ -23,11 +28,11 @@ function upload(request, response) {
     owner: getOwner(request),
   });
 
-  return response.status(201).json({ data: documentsService.toPublicDocument(document) });
+  return response.status(201).json({ data: toPublicDocument(document) });
 }
 
 function list(request, response) {
-  const data = documentsService.listDocuments(getOwner(request));
+  const data = documentsService.listDocuments(getOwner(request)).map(toPublicDocument);
   return response.status(200).json({ data, count: data.length });
 }
 

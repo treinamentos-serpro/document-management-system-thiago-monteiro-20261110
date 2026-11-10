@@ -13,8 +13,7 @@ function createDocument({ id, originalName, size, storageName, owner }) {
 
 function listDocuments(owner) {
   return documentsRepository.findByOwner(owner)
-    .sort((first, second) => second.uploadedAt.localeCompare(first.uploadedAt))
-    .map(toPublicDocument);
+    .sort((first, second) => second.uploadedAt.localeCompare(first.uploadedAt));
 }
 
 function getDocumentForDownload(id, owner) {
@@ -30,9 +29,4 @@ function getDocumentForDownload(id, owner) {
   };
 }
 
-function toPublicDocument(document) {
-  const { storageName, ...publicDocument } = document;
-  return publicDocument;
-}
-
-module.exports = { createDocument, listDocuments, getDocumentForDownload, toPublicDocument };
+module.exports = { createDocument, listDocuments, getDocumentForDownload };

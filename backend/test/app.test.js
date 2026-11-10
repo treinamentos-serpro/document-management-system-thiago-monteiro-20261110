@@ -36,11 +36,14 @@ test('upload, listagem e download de documentos', async (context) => {
     assert.strictEqual(uploaded.size, Buffer.byteLength('conteudo de teste'));
     assert.strictEqual(uploaded.owner, 'anonymous');
     assert.ok(uploaded.uploadedAt);
+    assert.strictEqual('storageName' in uploaded, false);
 
     const listResponse = await fetch(`${baseUrl}/documents`);
     assert.strictEqual(listResponse.status, 200);
     const listing = await listResponse.json();
-    assert.ok(listing.data.some((document) => document.id === documentId));
+    const listedDocument = listing.data.find((document) => document.id === documentId);
+    assert.ok(listedDocument);
+    assert.strictEqual('storageName' in listedDocument, false);
     assert.strictEqual(listing.count, listing.data.length);
 
     const downloadResponse = await fetch(`${baseUrl}/documents/${documentId}/download`);
